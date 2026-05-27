@@ -12,7 +12,6 @@ mixin UPlayController {
   UPlayConfig? playConfig;
   Timer? _makeTimer;
   bool isGesOperating = false; //是否正在手势操作
-  ValueNotifier<bool> isLoading = ValueNotifier(false); //是否加载
   ValueNotifier<bool> isPlaying = ValueNotifier(false); //是否播放
   ValueNotifier<bool> showMake = ValueNotifier(false); //是否显示工具
   ValueNotifier<double> playSpeed = ValueNotifier(1.0); //播放速度
@@ -59,7 +58,6 @@ mixin UPlayController {
     await SystemChrome.setPreferredOrientations([.portraitUp]);
     _makeTimer?.cancel();
     _makeTimer == null;
-    isLoading.dispose();
     isPlaying.dispose();
     showMake.dispose();
     playSpeed.dispose();
@@ -73,7 +71,6 @@ mixin UPlayController {
       await willPlay();
       await dispose(isExit: false);
       showMake.value = true;
-      isLoading.value = true;
       if (path.startsWith('http')) {
         playerController = VideoPlayerController.networkUrl(Uri.parse(path));
       } else {
@@ -91,7 +88,6 @@ mixin UPlayController {
       abnormalPlay(e);
     } finally {
       showMake.value = false;
-      isLoading.value = false;
     }
   }
 

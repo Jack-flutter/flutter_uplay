@@ -24,17 +24,12 @@ class UPlayWidget extends StatelessWidget {
         height: .maxFinite,
         color: Colors.black,
         alignment: .center,
-        child: ValueListenableBuilder(
-          valueListenable: controller.isLoading,
-          builder: (context, value, child) {
-            return controller.playerController == null
-                ? const SizedBox.shrink()
-                : AspectRatio(
-                    aspectRatio: controller.playerController!.value.aspectRatio,
-                    child: VideoPlayer(controller.playerController!),
-                  );
-          },
-        ),
+        child: controller.playerController == null
+            ? const SizedBox.shrink()
+            : AspectRatio(
+                aspectRatio: controller.playerController!.value.aspectRatio,
+                child: VideoPlayer(controller.playerController!),
+              ),
       ),
     );
   }
