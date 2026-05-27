@@ -76,6 +76,7 @@ mixin UPlayController {
       } else {
         playerController = VideoPlayerController.file(File(path));
       }
+      playerController?.addListener(_playerControllerListener);
       await playerController?.initialize();
       final duration = playerController!.value.position.inSeconds;
       playerController?.setPlaybackSpeed(playSpeed.value);
