@@ -39,7 +39,7 @@ class _PlayPageState extends State<PlayPage> {
   @override
   void initState() {
     // TODO: implement initState
-    controller.playFile('http://vjs.zencdn.net/v/oceans.mp4');
+    controller.playFile();
     super.initState();
   }
 
@@ -51,9 +51,10 @@ class _PlayPageState extends State<PlayPage> {
 
 class PlayController with UPlayController {
   @override
-  Future<dynamic> willPlay() async {
+  Future<String> willPlay() async {
     // TODO: implement willPlay
     debugPrint('willPlay');
+    return 'http://vjs.zencdn.net/v/oceans.mp4';
   }
 
   @override

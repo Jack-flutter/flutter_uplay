@@ -23,7 +23,7 @@ mixin UPlayController {
   UPlayConfig get _cf => playConfig ?? UPlayConfig();
 
   /*将要播放*/
-  Future<dynamic> willPlay();
+  Future<String> willPlay();
 
   /*开始播放*/
   Future<dynamic> startPlay(VideoPlayerController ctr);
@@ -66,11 +66,11 @@ mixin UPlayController {
   }
 
   /// 播放文件
-  Future<dynamic> playFile(String path, {int? position}) async {
+  Future<dynamic> playFile({int? position}) async {
     try {
-      await willPlay();
-      await dispose(isExit: false);
       showMake.value = true;
+      await dispose(isExit: false);
+      final path = await willPlay();
       if (path.startsWith('http')) {
         playerController = VideoPlayerController.networkUrl(Uri.parse(path));
       } else {
