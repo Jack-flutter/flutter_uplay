@@ -68,7 +68,6 @@ mixin UPlayController {
   /// 播放文件
   Future<dynamic> playFile({int? position}) async {
     try {
-      showMake.value = true;
       await dispose(isExit: false);
       final path = await willPlay();
       if (path.startsWith('http')) {
