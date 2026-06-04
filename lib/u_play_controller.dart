@@ -11,6 +11,7 @@ mixin UPlayController {
   BuildContext? playContext;
   UPlayConfig? playConfig;
   Timer? _makeTimer;
+  bool isInitialize = false; //是否正初始化
   bool isGesOperating = false; //是否正在手势操作
   ValueNotifier<bool> isPlaying = ValueNotifier(false); //是否播放
   ValueNotifier<bool> showMake = ValueNotifier(false); //是否显示工具
@@ -68,6 +69,7 @@ mixin UPlayController {
   /// 播放文件
   Future<dynamic> playFile({int? position}) async {
     try {
+      isInitialize = true;
       await dispose(isExit: false);
       final path = await willPlay();
       if (path.startsWith('http')) {
@@ -87,7 +89,8 @@ mixin UPlayController {
     } catch (e) {
       abnormalPlay(e);
     } finally {
-      showMake.value = false;
+      _hideToolbar();
+      isInitialize = false;
     }
   }
 
