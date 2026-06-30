@@ -26,11 +26,16 @@ class UPlayWidget extends StatelessWidget {
         alignment: .center,
         child: controller.playerController == null
             ? const SizedBox.shrink()
-            : AspectRatio(
-                aspectRatio: controller.playerController!.value.aspectRatio,
-                child: VideoPlayer(controller.playerController!),
-              ),
+            : _buildAspectRatio(),
       ),
+    );
+  }
+
+  AspectRatio _buildAspectRatio() {
+    final play = controller.playerController!.controller;
+    return AspectRatio(
+      aspectRatio: play.value.aspectRatio,
+      child: VideoPlayer(play),
     );
   }
 }

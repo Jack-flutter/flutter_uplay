@@ -15,37 +15,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final PlayController controller = PlayController();
+
+  void playFun() {
+    controller.playFile().whenComplete(() {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Plugin example app')),
-        body: const PlayPage(),
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+          leading: IconButton(
+            onPressed: playFun,
+            icon: const Icon(Icons.play_circle, color: Colors.black),
+          ),
+        ),
+        body: UPlayWidget(controller: controller),
       ),
     );
-  }
-}
-
-class PlayPage extends StatefulWidget {
-  const PlayPage({super.key});
-
-  @override
-  State<PlayPage> createState() => _PlayPageState();
-}
-
-class _PlayPageState extends State<PlayPage> {
-  final PlayController controller = PlayController();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    controller.playFile();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return UPlayWidget(controller: controller);
   }
 }
 
@@ -58,7 +49,7 @@ class PlayController with UPlayController {
   }
 
   @override
-  Future<dynamic> startPlay(VideoPlayerController ctr) async {
+  void startPlay(VideoPlayerController ctr) {
     // TODO: implement startPlay
     debugPrint('startPlay');
   }

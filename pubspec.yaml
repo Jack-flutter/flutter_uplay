@@ -14,6 +14,7 @@ dependencies:
   video_player: ^2.11.1
   screen_brightness: ^2.1.8
   volume_controller: ^3.5.0
+  cached_video_player_plus: ^4.1.0
 
 dev_dependencies:
   flutter_test:
