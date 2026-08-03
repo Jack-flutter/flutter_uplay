@@ -27,13 +27,13 @@ mixin UPlayController {
   UPlayConfig get _cf => playConfig ?? UPlayConfig();
 
   /*将要播放*/
-  Future<String> willPlay();
+  Future<String> willPlayFile();
 
   /*开始播放*/
-  void startPlay(VideoPlayerController ctr);
+  void startPlayFile(VideoPlayerController ctr);
 
   /*异常播放*/
-  void abnormalPlay(Object error);
+  void abnormalPlayFile(Object error);
 
   /*播放状态变化*/
   void playerStateChange(VideoPlayerValue value);
@@ -56,7 +56,6 @@ mixin UPlayController {
   /// 资源释放 页面销毁需要调用
   Future dispose({bool isExit = true}) async {
     playerController?.controller.removeListener(_playerControllerListener);
-    await WakelockPlus.disable();
     await playerController?.dispose();
     playerController = null;
     if (isExit == false) return;
@@ -68,6 +67,7 @@ mixin UPlayController {
     playSpeed.dispose();
     playVolume.dispose();
     playBrightness.dispose();
+    WakelockPlus.disable();
   }
 
   /// 播放文件
@@ -75,7 +75,7 @@ mixin UPlayController {
     try {
       isInitialize = true;
       await dispose(isExit: false);
-      final path = await willPlay();
+      final path = await willPlayFile();
       if (path.startsWith('http')) {
         playerController = CachedVideoPlayerPlus.networkUrl(Uri.parse(path));
       } else {
@@ -89,9 +89,9 @@ mixin UPlayController {
         playerController?.controller.seekTo(Duration(seconds: position));
       }
       playerController?.controller.play();
-      startPlay(playerController!.controller);
+      startPlayFile(playerController!.controller);
     } catch (e) {
-      abnormalPlay(e);
+      abnormalPlayFile(e);
     } finally {
       _hideToolbar();
       isInitialize = false;

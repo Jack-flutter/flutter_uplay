@@ -42,20 +42,20 @@ class _MyAppState extends State<MyApp> {
 
 class PlayController with UPlayController {
   @override
-  Future<String> willPlay() async {
+  Future<String> willPlayFile() async {
     // TODO: implement willPlay
     debugPrint('willPlay');
     return 'http://vjs.zencdn.net/v/oceans.mp4';
   }
 
   @override
-  void startPlay(VideoPlayerController ctr) {
+  void startPlayFile(VideoPlayerController ctr) {
     // TODO: implement startPlay
     debugPrint('startPlay');
   }
 
   @override
-  void abnormalPlay(Object error) {
+  void abnormalPlayFile(Object error) {
     // TODO: implement abnormalPlay
     debugPrint('abnormalPlay');
   }
