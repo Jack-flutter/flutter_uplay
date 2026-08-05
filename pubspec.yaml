@@ -1,6 +1,6 @@
 name: flutter_uplay
 description: "A new Flutter plugin project."
-version: 0.0.1
+version: 1.0.0
 homepage:
 
 environment:
@@ -11,10 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  video_player: ^2.11.1
-  wakelock_plus: ^1.6.1
-  screen_brightness: ^2.1.8
-  volume_controller: ^3.5.0
+  video_player: ^2.13.0
+  wakelock_plus: ^1.7.0
+  screen_brightness: ^2.1.11
+  volume_controller: ^3.6.0
   cached_video_player_plus: ^4.1.0
 
 

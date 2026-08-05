@@ -168,6 +168,7 @@ mixin UPlayController {
     final dx = details.localPosition.dx;
     final width = MediaQuery.sizeOf(playContext!).width;
     if (dx < width * _cf.leftSpacing) {
+      VolumeController.instance.showSystemUI = false;
       _updatePlayVolume(details.delta.dy);
     } else if (dx > width * _cf.rightSpacing) {
       _updatePlayBrightness(details.delta.dy);
