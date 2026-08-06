@@ -155,11 +155,11 @@ mixin UPlayController {
     final dx = details.localPosition.dx;
     final width = MediaQuery.sizeOf(playContext!).width;
     if (dx < width * _cf.leftSpacing) {
-      playVolume.value = await VolumeController.instance.getVolume();
-      volumeDragStart();
-    } else if (dx > width * _cf.rightSpacing) {
       playBrightness.value = await ScreenBrightness.instance.application;
       brightnessDragStart();
+    } else if (dx > width * _cf.rightSpacing) {
+      playVolume.value = await VolumeController.instance.getVolume();
+      volumeDragStart();
     }
   }
 
