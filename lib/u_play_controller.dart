@@ -168,10 +168,10 @@ mixin UPlayController {
     final dx = details.localPosition.dx;
     final width = MediaQuery.sizeOf(playContext!).width;
     if (dx < width * _cf.leftSpacing) {
+      _updatePlayBrightness(details.delta.dy);
+    } else if (dx > width * _cf.rightSpacing) {
       VolumeController.instance.showSystemUI = false;
       _updatePlayVolume(details.delta.dy);
-    } else if (dx > width * _cf.rightSpacing) {
-      _updatePlayBrightness(details.delta.dy);
     }
   }
 
@@ -197,7 +197,7 @@ mixin UPlayController {
 
   /// 播放监听
   void _playerControllerListener() {
-    if (playerController?.isInitialized == false) return;
+    if (isInitialize == true) return;
     isPlaying.value = playerController?.controller.value.isPlaying ?? false;
     if (isPlaying.value == true && isWakelock == false) {
       isWakelock = true;
