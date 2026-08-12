@@ -7,7 +7,6 @@ import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:volume_controller/volume_controller.dart';
 import 'package:video_player/video_player.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 mixin UPlayController {
   BuildContext? playContext;
@@ -15,7 +14,6 @@ mixin UPlayController {
   Timer? _makeTimer;
   bool isInitialize = false; //是否正初始化
   bool isGesOperating = false; //是否正在手势操作
-  bool isWakelock = false; //是否常亮
   ValueNotifier<bool> isPlaying = ValueNotifier(false); //是否播放
   ValueNotifier<bool> showMake = ValueNotifier(false); //是否显示工具
   ValueNotifier<double> playSpeed = ValueNotifier(1.0); //播放速度
@@ -67,7 +65,6 @@ mixin UPlayController {
     playSpeed.dispose();
     playVolume.dispose();
     playBrightness.dispose();
-    WakelockPlus.disable();
   }
 
   /// 播放文件
@@ -199,13 +196,6 @@ mixin UPlayController {
   void _playerControllerListener() {
     if (isInitialize == true) return;
     isPlaying.value = playerController?.controller.value.isPlaying ?? false;
-    if (isPlaying.value == true && isWakelock == false) {
-      isWakelock = true;
-      WakelockPlus.enable();
-    } else if (isPlaying.value == false && isWakelock == true) {
-      isWakelock = false;
-      WakelockPlus.disable();
-    }
     playerStateChange(playerController!.controller.value);
   }
 
