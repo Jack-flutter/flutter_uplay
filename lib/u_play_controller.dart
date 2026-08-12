@@ -74,7 +74,11 @@ mixin UPlayController {
       await dispose(isExit: false);
       final path = await willPlayFile();
       if (path.startsWith('http')) {
-        playerController = CachedVideoPlayerPlus.networkUrl(Uri.parse(path));
+        final bool isCache = !(path.toLowerCase().endsWith('.m3u8'));
+        playerController = CachedVideoPlayerPlus.networkUrl(
+          Uri.parse(path),
+          skipCache: isCache,
+        );
       } else {
         playerController = CachedVideoPlayerPlus.file(File(path));
       }
