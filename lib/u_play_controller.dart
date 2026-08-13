@@ -74,10 +74,10 @@ mixin UPlayController {
       await dispose(isExit: false);
       final path = await willPlayFile();
       if (path.startsWith('http')) {
-        final bool isCache = !(path.toLowerCase().endsWith('.m3u8'));
+        final bool skipCache = isAdaptiveStreamUrl(path);
         playerController = CachedVideoPlayerPlus.networkUrl(
           Uri.parse(path),
-          skipCache: isCache,
+          skipCache: skipCache,
         );
       } else {
         playerController = CachedVideoPlayerPlus.file(File(path));
@@ -231,6 +231,16 @@ mixin UPlayController {
         showMake.value = false;
       }
     });
+  }
+
+  /// 判断是否是自适应流媒体（m3u8 / mpd，这些不能用CachedVideoPlayerPlus缓存）
+  bool isAdaptiveStreamUrl(String url) {
+    final uri = Uri.parse(url);
+    final path = uri.path.toLowerCase();
+    return path.endsWith('.m3u8') ||
+        path.endsWith('.mpd') ||
+        path.endsWith('.ism') ||
+        path.endsWith('.ismc');
   }
 }
 
