@@ -32,7 +32,7 @@ class UPlayWidget extends StatelessWidget {
   }
 
   AspectRatio _buildAspectRatio() {
-    final play = controller.playerController!.controller;
+    final play = controller.playerController!;
     return AspectRatio(
       aspectRatio: play.value.aspectRatio,
       child: VideoPlayer(play),

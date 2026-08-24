@@ -3,7 +3,6 @@ import 'dart:io' show File;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:volume_controller/volume_controller.dart';
 import 'package:video_player/video_player.dart';
@@ -19,7 +18,7 @@ mixin UPlayController {
   ValueNotifier<double> playSpeed = ValueNotifier(1.0); //播放速度
   ValueNotifier<double> playVolume = ValueNotifier(1.0); //视频声音
   ValueNotifier<double> playBrightness = ValueNotifier(1.0); //视频亮度
-  CachedVideoPlayerPlus? playerController; //控制器
+  VideoPlayerController? playerController; //控制器
 
   //播放配置
   UPlayConfig get _cf => playConfig ?? UPlayConfig();
@@ -53,7 +52,7 @@ mixin UPlayController {
 
   /// 资源释放 页面销毁需要调用
   Future dispose({bool isExit = true}) async {
-    playerController?.controller.removeListener(_playerControllerListener);
+    playerController?.removeListener(_playerControllerListener);
     await playerController?.dispose();
     playerController = null;
     if (isExit == false) return;
@@ -74,23 +73,19 @@ mixin UPlayController {
       await dispose(isExit: false);
       final path = await willPlayFile();
       if (path.startsWith('http')) {
-        final bool skipCache = isAdaptiveStreamUrl(path);
-        playerController = CachedVideoPlayerPlus.networkUrl(
-          Uri.parse(path),
-          skipCache: skipCache,
-        );
+        playerController = VideoPlayerController.networkUrl(Uri.parse(path));
       } else {
-        playerController = CachedVideoPlayerPlus.file(File(path));
+        playerController = VideoPlayerController.file(File(path));
       }
       await playerController?.initialize();
-      playerController?.controller.addListener(_playerControllerListener);
-      final duration = playerController!.controller.value.position.inSeconds;
-      playerController?.controller.setPlaybackSpeed(playSpeed.value);
+      playerController?.addListener(_playerControllerListener);
+      final duration = playerController!.value.position.inSeconds;
+      playerController?.setPlaybackSpeed(playSpeed.value);
       if (position != null && position + 2 < duration) {
-        playerController?.controller.seekTo(Duration(seconds: position));
+        playerController?.seekTo(Duration(seconds: position));
       }
-      playerController?.controller.play();
-      startPlayFile(playerController!.controller);
+      playerController?.play();
+      startPlayFile(playerController!);
     } catch (e) {
       abnormalPlayFile(e);
     } finally {
@@ -101,12 +96,12 @@ mixin UPlayController {
 
   /// 播放暂停
   void filePlayPause() {
-    if (playerController?.controller.value.isInitialized == false) return;
-    if (playerController?.controller.value.isPlaying == true) {
-      playerController?.controller.pause();
+    if (playerController?.value.isInitialized == false) return;
+    if (playerController?.value.isPlaying == true) {
+      playerController?.pause();
       isPlaying.value = false;
     } else {
-      playerController?.controller.play();
+      playerController?.play();
       isPlaying.value = true;
       // 播放时5秒后隐藏控制条
       _hideToolbar();
@@ -127,7 +122,7 @@ mixin UPlayController {
   /// 更新播放速度
   void updatePlaySpeed(double value) {
     playSpeed.value = value;
-    playerController?.controller.setPlaybackSpeed(value);
+    playerController?.setPlaybackSpeed(value);
   }
 
   /// 单击显示隐藏操作组建
@@ -138,7 +133,7 @@ mixin UPlayController {
 
   /// 处理屏幕双击事件
   void playDoubleTapDown(TapDownDetails details) {
-    if (playerController?.controller.value.isInitialized == false) return;
+    if (playerController?.value.isInitialized == false) return;
     final width = MediaQuery.sizeOf(playContext!).width;
     final dx = details.localPosition.dx;
     if (dx < width * _cf.leftSpacing) {
@@ -184,7 +179,7 @@ mixin UPlayController {
 
   /// 长按开始（快速播放）
   void playLongPressStart(LongPressStartDetails details) {
-    if (playerController?.controller.value.isInitialized == false) return;
+    if (playerController?.value.isInitialized == false) return;
     if (playSpeed.value == _cf.speedMax) return;
     final width = MediaQuery.sizeOf(playContext!).width;
     final dx = details.localPosition.dx;
@@ -192,15 +187,15 @@ mixin UPlayController {
         dx < width * _cf.leftSpacing || dx > width * _cf.rightSpacing;
     if (canForward) {
       playSpeed.value = _cf.speedMax;
-      playerController?.controller.setPlaybackSpeed(_cf.speedMax);
+      playerController?.setPlaybackSpeed(_cf.speedMax);
     }
   }
 
   /// 播放监听
   void _playerControllerListener() {
     if (isInitialize == true) return;
-    isPlaying.value = playerController?.controller.value.isPlaying ?? false;
-    playerStateChange(playerController!.controller.value);
+    isPlaying.value = playerController?.value.isPlaying ?? false;
+    playerStateChange(playerController!.value);
   }
 
   /// 调整屏幕亮度
